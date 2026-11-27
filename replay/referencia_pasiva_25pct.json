@@ -1,0 +1,11 @@
+{
+    "Tipo": "REFERENCIA_ANALITICA_COMPLEMENTARIA",
+    "Asignacion_inicial_BTC_pct": 25,
+    "Asignacion_inicial_efectivo_pct": 75,
+    "Rebalanceo": false,
+    "Capital_inicial_USDT": 50000,
+    "Capital_final_USDT": 55666.541115,
+    "Rendimiento_neto_pct": 11.333082230000002,
+    "Incluida_en_90_ciclos": false,
+    "Sustituye_protocolo_original": false
+}

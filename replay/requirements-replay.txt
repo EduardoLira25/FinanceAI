@@ -1,0 +1,2 @@
+# Dependencias adicionales del reporte replay
+matplotlib==3.10.0

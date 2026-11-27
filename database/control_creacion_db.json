@@ -1,0 +1,30 @@
+{
+    "Proyecto": "FinanceAI",
+    "Fecha_UTC": "2026-11-26T14:29:03.895220+00:00",
+    "Base_de_datos": "financeai.db",
+    "Version_esquema": 1,
+    "SQLite": "3.54.1",
+    "Tablas": 13,
+    "Indices_explicitos": 5,
+    "Registros_por_tabla": {
+        "agent_cycles": 0,
+        "agent_decisions": 0,
+        "assets": 0,
+        "candles": 0,
+        "equity_history": 0,
+        "error_logs": 0,
+        "model_versions": 0,
+        "orders": 0,
+        "portfolio": 0,
+        "positions": 0,
+        "predictions": 0,
+        "risk_config": 0,
+        "system_logs": 0
+    },
+    "Llaves_foraneas_verificadas": true,
+    "Integridad_estructural": true,
+    "Journal_mode": "wal",
+    "SHA256_schema": "8e53eac091671d50a5933ca470f358c8feac73bfcbbb2945e4f7190cd50f11f2",
+    "Modelo_modificado": false,
+    "TE_reevaluado": false
+}

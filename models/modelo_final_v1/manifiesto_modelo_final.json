@@ -1,0 +1,109 @@
+{
+    "Proyecto": "FinanceAI",
+    "Version": "1.0.0",
+    "Estado": "CONGELADO_ANTES_DE_TE",
+    "Modelo_ID": "TEC_B_LSTM_S42",
+    "Arquitectura": "LSTM",
+    "Activo": "BTCUSDT",
+    "Fuente": "MEXC",
+    "Frecuencia": "1d",
+    "Zona_horaria": "UTC",
+    "Semilla": 42,
+    "Neuronas": 16,
+    "Parametros": 1425,
+    "Ventana": 20,
+    "Contexto_efectivo_rendimientos": 39,
+    "Horizonte": 1,
+    "Forma_entrada": [
+        null,
+        20,
+        3
+    ],
+    "Variables_ordenadas": [
+        "Return",
+        "SMA_Distance_20",
+        "Volatility_20"
+    ],
+    "Variable_objetivo": "Close[t+1]/Close[t]-1",
+    "SMA_ventana": 20,
+    "Volatilidad_ventana": 20,
+    "Volatilidad_ddof": 1,
+    "Volatilidad_anualizada": false,
+    "Estrategia": "Pronostico",
+    "Umbral": 0.001,
+    "Regla_posicion": "Prediccion > Umbral",
+    "Filtro_SMA_adicional": false,
+    "Capital_inicial_TE": 100000.0,
+    "Comision_TE": 0.001,
+    "Apalancamiento": false,
+    "Posiciones_cortas": false,
+    "Exposicion_compra": 1.0,
+    "Ejecucion": "Siguiente apertura",
+    "Valoracion": "Cierre diario",
+    "Deslizamiento": 0.0,
+    "Liquidacion_final": true,
+    "Observaciones_TR": 1730,
+    "Observaciones_VA": 375,
+    "Metricas_VA": {
+        "MAE": 0.016512153676406197,
+        "RMSE": 0.023212343336059007,
+        "Precision_direccional": 54.93333333333334,
+        "Error_medio": -0.0005070539940297011,
+        "Observaciones": 375
+    },
+    "Rendimiento_neto_VA_pct": 49.17006442938789,
+    "Max_drawdown_VA_pct": 10.0505546146624,
+    "Referencias_evaluacion_TE": [
+        "Pronostico cero",
+        "Regresion lineal"
+    ],
+    "Referencias_simulacion_TE": [
+        "Efectivo",
+        "Buy and Hold"
+    ],
+    "Seleccion_modelo": "Menor RMSE en VA",
+    "Seleccion_estrategia": "Mayor rendimiento neto en VA y menor drawdown en caso de empate",
+    "TensorFlow": "2.21.0",
+    "Python": "3.13.16",
+    "TE_utilizado_al_congelar": false,
+    "Modificaciones_despues_de_TE_permitidas": false,
+    "Archivos": {
+        "modelo_final.keras": {
+            "SHA256": "8d2b7d380bda5e57c4b7b27d8e5fdb15e961e6b74ade0d427ccf287006a0b0ec",
+            "Bytes": 48645
+        },
+        "scaler_X.joblib": {
+            "SHA256": "45e84fce2454a031007fc16e34b8c31385206cec17fafa8538ff8969fbca8203",
+            "Bytes": 671
+        },
+        "scaler_y.joblib": {
+            "SHA256": "8610af48a43f4061c71e88dad55f0a7312aba1cb423ad16b555538db7defac62",
+            "Bytes": 623
+        },
+        "regresion_lineal.joblib": {
+            "SHA256": "67e197eb0d6ede39e36d4fea0f0a83acce7dc3b1c67cb0ec902186d7795b50da",
+            "Bytes": 873
+        },
+        "scaler_X_referencia.joblib": {
+            "SHA256": "07584fce6c0e2a73c9e908961074a35b16e34af8b9f415bc161ce5d935d43f69",
+            "Bytes": 623
+        },
+        "scaler_y_referencia.joblib": {
+            "SHA256": "9c05d5c84b7b7c218195359596ba62342db25970c2cd023a906178b5266db632",
+            "Bytes": 623
+        },
+        "config_estrategia_VA.json": {
+            "SHA256": "9b295ffc5d4bcb76af785db60bcbefb644e1a17f9ec0a00cd40c9606f6b4c9f2",
+            "Bytes": 774
+        },
+        "especificaciones_indicadores.json": {
+            "SHA256": "8464b1f31318599894a836f72c783a374e50afd3f2414ba91c54c6ec24f3bd94",
+            "Bytes": 604
+        },
+        "simulador.py": {
+            "SHA256": "640b5c9e9fffa461a2a8bb06bc57848a98e8ec4b265f5c950458b193bfecb923",
+            "Bytes": 6014
+        }
+    },
+    "Fecha_congelamiento_UTC": "2026-11-25T19:23:19.905173+00:00"
+}

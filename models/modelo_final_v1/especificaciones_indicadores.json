@@ -1,0 +1,21 @@
+{
+    "Ventana": 20,
+    "Frecuencia": "Diaria",
+    "SMA_20": {
+        "Formula": "Media de los ultimos 20 cierres",
+        "Primera_fecha_valida": "2020-01-20 00:00:00+00:00"
+    },
+    "SMA_Distance_20": {
+        "Formula": "Close / SMA_20 - 1",
+        "Unidad": "Proporcion"
+    },
+    "Volatility_20": {
+        "Formula": "Desviacion estandar muestral",
+        "ddof": 1,
+        "Anualizada": false,
+        "Primera_fecha_valida": "2020-01-21 00:00:00+00:00"
+    },
+    "Relleno_valores_iniciales": false,
+    "Informacion_disponible": "Cierre de la vela diaria",
+    "TE_utilizado": false
+}

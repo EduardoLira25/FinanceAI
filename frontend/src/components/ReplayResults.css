@@ -1,0 +1,98 @@
+.fa-replay {
+  margin: 24px 0;
+  padding: 24px;
+  border: 1px solid rgba(129,140,248,.25);
+  border-radius: 18px;
+  background: rgba(99,102,241,.035);
+  color: inherit;
+  min-width: 0;
+}
+
+.fa-replay header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fa-replay h2 {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.fa-replay h3 {
+  font-size: 1rem;
+  margin: 0 0 16px;
+}
+
+.fa-replay p,
+.fa-replay footer,
+.fa-replay small {
+  font-size: .82rem;
+  line-height: 1.7;
+  opacity: .8;
+}
+
+.fa-replay-tag {
+  font-size: .72rem;
+  color: #a5b4fc;
+  background: rgba(129,140,248,.12);
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.fa-replay-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.fa-replay-grid article {
+  border: 1px solid rgba(129,140,248,.18);
+  border-radius: 13px;
+  padding: 18px;
+}
+
+.fa-replay-profit {
+  display: block;
+  margin: 8px 0;
+  color: #34d399;
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.fa-replay-summary {
+  font-size: .9rem;
+  padding: 15px 0;
+}
+
+.fa-replay-table {
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.fa-replay-table table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 800px;
+  font-size: .8rem;
+}
+
+.fa-replay-table th,
+.fa-replay-table td {
+  text-align: left;
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(148,163,184,.13);
+}
+
+.fa-replay footer {
+  margin-top: 18px;
+}
+
+@media(max-width:800px) {
+  .fa-replay-grid {
+    grid-template-columns: 1fr;
+  }
+}

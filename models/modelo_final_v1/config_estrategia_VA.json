@@ -1,0 +1,31 @@
+{
+    "Modelo": "TEC_B_LSTM_S42",
+    "Capital_inicial": 100000.0,
+    "Comision": 0.001,
+    "Umbrales_evaluados": [
+        0.0005,
+        0.001,
+        0.0015,
+        0.002,
+        0.003
+    ],
+    "Estrategias": [
+        "Pronostico",
+        "Pronostico_SMA"
+    ],
+    "Seleccion": "Mayor rendimiento neto en VA",
+    "Desempate": [
+        "Menor drawdown",
+        "Menor umbral",
+        "Orden alfabetico de estrategia"
+    ],
+    "Ejecucion": "Siguiente apertura",
+    "Valoracion": "Cierre diario",
+    "Liquidacion_final": true,
+    "Deslizamiento": 0.0,
+    "Estrategia_seleccionada": "Pronostico",
+    "Umbral_seleccionado": 0.001,
+    "Rendimiento_neto_VA_pct": 49.17006442938789,
+    "Max_drawdown_VA_pct": 10.0505546146624,
+    "TE_utilizado": false
+}

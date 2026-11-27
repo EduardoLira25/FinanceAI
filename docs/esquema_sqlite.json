@@ -1,0 +1,2012 @@
+{
+    "Motor": "SQLite",
+    "Version": "3.54.1",
+    "Version_esquema": 1,
+    "Tablas": {
+        "agent_cycles": {
+            "Descripcion": "Ciclos operativos del agente.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "portfolio_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "candle_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "prediction_id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "risk_config_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "status",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": "'PENDING'",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "attempts",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "started_at",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "finished_at",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "agent_cycles",
+                    "Columnas_origen": [
+                        "risk_config_id",
+                        "portfolio_id"
+                    ],
+                    "Tabla_destino": "risk_config",
+                    "Columnas_destino": [
+                        "id",
+                        "portfolio_id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                },
+                {
+                    "ID": 1,
+                    "Tabla_origen": "agent_cycles",
+                    "Columnas_origen": [
+                        "prediction_id",
+                        "candle_id"
+                    ],
+                    "Tabla_destino": "predictions",
+                    "Columnas_destino": [
+                        "id",
+                        "candle_id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                },
+                {
+                    "ID": 2,
+                    "Tabla_origen": "agent_cycles",
+                    "Columnas_origen": [
+                        "candle_id"
+                    ],
+                    "Tabla_destino": "candles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                },
+                {
+                    "ID": 3,
+                    "Tabla_origen": "agent_cycles",
+                    "Columnas_origen": [
+                        "portfolio_id"
+                    ],
+                    "Tabla_destino": "portfolio",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "idx_cycles_status",
+                    "unique": 0,
+                    "origin": "c",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 5,
+                            "name": "status"
+                        }
+                    ],
+                    "SQL": "CREATE INDEX idx_cycles_status\nON agent_cycles(status)"
+                },
+                {
+                    "seq": 1,
+                    "name": "sqlite_autoindex_agent_cycles_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "portfolio_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "candle_id"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 0,
+            "SQL": "CREATE TABLE agent_cycles (\n    id INTEGER PRIMARY KEY,\n    portfolio_id INTEGER NOT NULL REFERENCES portfolio(id),\n    candle_id INTEGER NOT NULL REFERENCES candles(id),\n    prediction_id INTEGER,\n    risk_config_id INTEGER NOT NULL,\n    status TEXT NOT NULL DEFAULT 'PENDING'\n        CHECK (status IN (\n            'PENDING', 'RUNNING', 'WAITING_EXECUTION',\n            'COMPLETED', 'REJECTED', 'PAUSED', 'ERROR'\n        )),\n    attempts INTEGER NOT NULL DEFAULT 0\n        CHECK (attempts >= 0),\n    started_at INTEGER,\n    finished_at INTEGER,\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    FOREIGN KEY (prediction_id, candle_id)\n        REFERENCES predictions(id, candle_id),\n    FOREIGN KEY (risk_config_id, portfolio_id)\n        REFERENCES risk_config(id, portfolio_id),\n    UNIQUE (portfolio_id, candle_id)\n) STRICT"
+        },
+        "agent_decisions": {
+            "Descripcion": "Propuestas y acciones autorizadas.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "cycle_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "proposed_action",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "authorized_action",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "rationale",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "llm_model",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "llm_response",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "risk_approved",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "risk_reason",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "latency_ms",
+                    "type": "REAL",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 10,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "agent_decisions",
+                    "Columnas_origen": [
+                        "cycle_id"
+                    ],
+                    "Tabla_destino": "agent_cycles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_agent_decisions_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "cycle_id"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 0,
+            "SQL": "CREATE TABLE agent_decisions (\n    id INTEGER PRIMARY KEY,\n    cycle_id INTEGER NOT NULL UNIQUE REFERENCES agent_cycles(id),\n    proposed_action TEXT NOT NULL\n        CHECK (proposed_action IN ('BUY', 'HOLD', 'SELL')),\n    authorized_action TEXT NOT NULL\n        CHECK (authorized_action IN ('BUY', 'HOLD', 'SELL')),\n    rationale TEXT NOT NULL,\n    llm_model TEXT,\n    llm_response TEXT,\n    risk_approved INTEGER NOT NULL\n        CHECK (risk_approved IN (0, 1)),\n    risk_reason TEXT,\n    latency_ms REAL CHECK (latency_ms >= 0),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    CHECK (risk_approved = 1 OR authorized_action = 'HOLD')\n) STRICT"
+        },
+        "assets": {
+            "Descripcion": "Catálogo de activos financieros.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "symbol",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "base_currency",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "quote_currency",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "exchange",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "active",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "1",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_assets_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "symbol"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE assets (\n    id INTEGER PRIMARY KEY,\n    symbol TEXT NOT NULL UNIQUE,\n    base_currency TEXT NOT NULL,\n    quote_currency TEXT NOT NULL,\n    exchange TEXT NOT NULL,\n    active INTEGER NOT NULL DEFAULT 1\n        CHECK (active IN (0, 1))\n) STRICT"
+        },
+        "candles": {
+            "Descripcion": "Velas OHLCV históricas y actualizadas.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "asset_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "interval_seconds",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "86400",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "open_time",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "close_time",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "open",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "high",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "low",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "close",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "volume",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 10,
+                    "name": "quote_volume",
+                    "type": "REAL",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 11,
+                    "name": "source",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 12,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "candles",
+                    "Columnas_origen": [
+                        "asset_id"
+                    ],
+                    "Tabla_destino": "assets",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_candles_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "asset_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "interval_seconds"
+                        },
+                        {
+                            "seqno": 2,
+                            "cid": 3,
+                            "name": "open_time"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 2521,
+            "SQL": "CREATE TABLE candles (\n    id INTEGER PRIMARY KEY,\n    asset_id INTEGER NOT NULL REFERENCES assets(id),\n    interval_seconds INTEGER NOT NULL DEFAULT 86400\n        CHECK (interval_seconds = 86400),\n    open_time INTEGER NOT NULL,\n    close_time INTEGER NOT NULL,\n    open REAL NOT NULL CHECK (open > 0),\n    high REAL NOT NULL CHECK (high > 0),\n    low REAL NOT NULL CHECK (low > 0),\n    close REAL NOT NULL CHECK (close > 0),\n    volume REAL NOT NULL CHECK (volume >= 0),\n    quote_volume REAL CHECK (quote_volume >= 0),\n    source TEXT NOT NULL,\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    CHECK (close_time = open_time + interval_seconds),\n    CHECK (open_time % interval_seconds = 0),\n    CHECK (high >= max(open, close, low)),\n    CHECK (low <= min(open, close, high)),\n    UNIQUE (asset_id, interval_seconds, open_time)\n) STRICT"
+        },
+        "equity_history": {
+            "Descripcion": "Valoraciones históricas del patrimonio.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "cycle_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "snapshot_type",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "cash_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "position_value_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "equity_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "drawdown",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "recorded_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "equity_history",
+                    "Columnas_origen": [
+                        "cycle_id"
+                    ],
+                    "Tabla_destino": "agent_cycles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "idx_equity_time",
+                    "unique": 0,
+                    "origin": "c",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 7,
+                            "name": "recorded_at"
+                        }
+                    ],
+                    "SQL": "CREATE INDEX idx_equity_time\nON equity_history(recorded_at)"
+                },
+                {
+                    "seq": 1,
+                    "name": "sqlite_autoindex_equity_history_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "cycle_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "snapshot_type"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 0,
+            "SQL": "CREATE TABLE equity_history (\n    id INTEGER PRIMARY KEY,\n    cycle_id INTEGER NOT NULL REFERENCES agent_cycles(id),\n    snapshot_type TEXT NOT NULL\n        CHECK (snapshot_type IN ('EXECUTION', 'VALUATION')),\n    cash_micros INTEGER NOT NULL CHECK (cash_micros >= 0),\n    position_value_micros INTEGER NOT NULL\n        CHECK (position_value_micros >= 0),\n    equity_micros INTEGER NOT NULL CHECK (equity_micros >= 0),\n    drawdown REAL NOT NULL CHECK (drawdown BETWEEN 0 AND 1),\n    recorded_at INTEGER NOT NULL,\n    CHECK (equity_micros = cash_micros + position_value_micros),\n    UNIQUE (cycle_id, snapshot_type)\n) STRICT"
+        },
+        "error_logs": {
+            "Descripcion": "Incidentes y acciones correctivas.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "cycle_id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "component",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "error_type",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "message",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "cause",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "corrective_action",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "retry_count",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "resolved",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 10,
+                    "name": "resolved_at",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "error_logs",
+                    "Columnas_origen": [
+                        "cycle_id"
+                    ],
+                    "Tabla_destino": "agent_cycles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "idx_error_logs_resolved",
+                    "unique": 0,
+                    "origin": "c",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 8,
+                            "name": "resolved"
+                        }
+                    ],
+                    "SQL": "CREATE INDEX idx_error_logs_resolved\nON error_logs(resolved)"
+                }
+            ],
+            "Strict": true,
+            "Registros": 0,
+            "SQL": "CREATE TABLE error_logs (\n    id INTEGER PRIMARY KEY,\n    cycle_id INTEGER REFERENCES agent_cycles(id),\n    component TEXT NOT NULL,\n    error_type TEXT NOT NULL,\n    message TEXT NOT NULL,\n    cause TEXT,\n    corrective_action TEXT,\n    retry_count INTEGER NOT NULL DEFAULT 0\n        CHECK (retry_count >= 0),\n    resolved INTEGER NOT NULL DEFAULT 0\n        CHECK (resolved IN (0, 1)),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    resolved_at INTEGER\n) STRICT"
+        },
+        "model_versions": {
+            "Descripcion": "Registro de versiones del modelo predictivo.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "version",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "architecture",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "window_size",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "feature_count",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "model_path",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "model_sha256",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "version"
+            ],
+            "Llaves_foraneas": [],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_model_versions_1",
+                    "unique": 1,
+                    "origin": "pk",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 0,
+                            "name": "version"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE model_versions (\n    version TEXT PRIMARY KEY,\n    architecture TEXT NOT NULL,\n    window_size INTEGER NOT NULL CHECK (window_size > 0),\n    feature_count INTEGER NOT NULL CHECK (feature_count > 0),\n    model_path TEXT NOT NULL,\n    model_sha256 TEXT NOT NULL CHECK (length(model_sha256) = 64),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch())\n) STRICT"
+        },
+        "orders": {
+            "Descripcion": "Órdenes financieras simuladas.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "decision_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "side",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "status",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": "'PENDING'",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "quantity_sats",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "price_micros",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "notional_micros",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "fee_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "slippage_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "execution_source",
+                    "type": "TEXT",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 10,
+                    "name": "filled_at",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 11,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "orders",
+                    "Columnas_origen": [
+                        "decision_id"
+                    ],
+                    "Tabla_destino": "agent_decisions",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "idx_orders_status",
+                    "unique": 0,
+                    "origin": "c",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 3,
+                            "name": "status"
+                        }
+                    ],
+                    "SQL": "CREATE INDEX idx_orders_status\nON orders(status)"
+                },
+                {
+                    "seq": 1,
+                    "name": "sqlite_autoindex_orders_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "decision_id"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 0,
+            "SQL": "CREATE TABLE orders (\n    id INTEGER PRIMARY KEY,\n    decision_id INTEGER NOT NULL UNIQUE\n        REFERENCES agent_decisions(id),\n    side TEXT NOT NULL CHECK (side IN ('BUY', 'SELL')),\n    status TEXT NOT NULL DEFAULT 'PENDING'\n        CHECK (status IN (\n            'PENDING', 'FILLED', 'REJECTED', 'CANCELLED'\n        )),\n    quantity_sats INTEGER NOT NULL CHECK (quantity_sats > 0),\n    price_micros INTEGER CHECK (price_micros > 0),\n    notional_micros INTEGER CHECK (notional_micros > 0),\n    fee_micros INTEGER NOT NULL DEFAULT 0\n        CHECK (fee_micros >= 0),\n    slippage_micros INTEGER NOT NULL DEFAULT 0\n        CHECK (slippage_micros >= 0),\n    execution_source TEXT,\n    filled_at INTEGER,\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    CHECK (\n        status != 'FILLED'\n        OR (\n            price_micros IS NOT NULL\n            AND notional_micros IS NOT NULL\n            AND filled_at IS NOT NULL\n            AND execution_source IS NOT NULL\n        )\n    )\n) STRICT"
+        },
+        "portfolio": {
+            "Descripcion": "Carteras financieras virtuales.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "name",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "mode",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "strategy",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "currency",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": "'USDT'",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "initial_cash_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "cash_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "status",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": "'PAUSED'",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "updated_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_portfolio_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "name"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE portfolio (\n    id INTEGER PRIMARY KEY,\n    name TEXT NOT NULL UNIQUE,\n    mode TEXT NOT NULL\n        CHECK (mode IN ('PAPER_LIVE', 'REPLAY')),\n    strategy TEXT NOT NULL\n        CHECK (strategy IN ('LLM', 'MODEL_ONLY', 'BUY_HOLD')),\n    currency TEXT NOT NULL DEFAULT 'USDT',\n    initial_cash_micros INTEGER NOT NULL\n        CHECK (initial_cash_micros > 0),\n    cash_micros INTEGER NOT NULL CHECK (cash_micros >= 0),\n    status TEXT NOT NULL DEFAULT 'PAUSED'\n        CHECK (status IN ('ACTIVE', 'PAUSED', 'STOPPED')),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    updated_at INTEGER NOT NULL DEFAULT (unixepoch())\n) STRICT"
+        },
+        "positions": {
+            "Descripcion": "Posiciones y costos de adquisición.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "portfolio_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "asset_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "quantity_sats",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "cost_basis_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "updated_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "positions",
+                    "Columnas_origen": [
+                        "asset_id"
+                    ],
+                    "Tabla_destino": "assets",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                },
+                {
+                    "ID": 1,
+                    "Tabla_origen": "positions",
+                    "Columnas_origen": [
+                        "portfolio_id"
+                    ],
+                    "Tabla_destino": "portfolio",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_positions_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "portfolio_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "asset_id"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE positions (\n    id INTEGER PRIMARY KEY,\n    portfolio_id INTEGER NOT NULL REFERENCES portfolio(id),\n    asset_id INTEGER NOT NULL REFERENCES assets(id),\n    quantity_sats INTEGER NOT NULL DEFAULT 0\n        CHECK (quantity_sats >= 0),\n    cost_basis_micros INTEGER NOT NULL DEFAULT 0\n        CHECK (cost_basis_micros >= 0),\n    updated_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    UNIQUE (portfolio_id, asset_id)\n) STRICT"
+        },
+        "predictions": {
+            "Descripcion": "Pronósticos financieros asociados a velas.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "candle_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "model_version",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "predicted_return",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "predicted_price",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "emission_time",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "target_open_time",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "target_close_time",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "inference_ms",
+                    "type": "REAL",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "predictions",
+                    "Columnas_origen": [
+                        "model_version"
+                    ],
+                    "Tabla_destino": "model_versions",
+                    "Columnas_destino": [
+                        "version"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                },
+                {
+                    "ID": 1,
+                    "Tabla_origen": "predictions",
+                    "Columnas_origen": [
+                        "candle_id"
+                    ],
+                    "Tabla_destino": "candles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_predictions_2",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 0,
+                            "name": "id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 1,
+                            "name": "candle_id"
+                        }
+                    ],
+                    "SQL": null
+                },
+                {
+                    "seq": 1,
+                    "name": "sqlite_autoindex_predictions_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "candle_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "model_version"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE predictions (\n    id INTEGER PRIMARY KEY,\n    candle_id INTEGER NOT NULL REFERENCES candles(id),\n    model_version TEXT NOT NULL\n        REFERENCES model_versions(version),\n    predicted_return REAL NOT NULL,\n    predicted_price REAL NOT NULL CHECK (predicted_price > 0),\n    emission_time INTEGER NOT NULL,\n    target_open_time INTEGER NOT NULL,\n    target_close_time INTEGER NOT NULL,\n    inference_ms REAL CHECK (inference_ms >= 0),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    CHECK (target_close_time = target_open_time + 86400),\n    CHECK (emission_time = target_open_time),\n    UNIQUE (candle_id, model_version),\n    UNIQUE (id, candle_id)\n) STRICT"
+        },
+        "risk_config": {
+            "Descripcion": "Configuraciones versionadas de riesgo.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "portfolio_id",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "version",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "max_exposure_bps",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "max_daily_loss_bps",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "max_data_age_seconds",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 6,
+                    "name": "min_order_micros",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 7,
+                    "name": "fee_bps",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 8,
+                    "name": "slippage_bps",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 9,
+                    "name": "prediction_threshold",
+                    "type": "REAL",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 10,
+                    "name": "emergency_stop",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "0",
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 11,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "risk_config",
+                    "Columnas_origen": [
+                        "portfolio_id"
+                    ],
+                    "Tabla_destino": "portfolio",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "sqlite_autoindex_risk_config_2",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 0,
+                            "name": "id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 1,
+                            "name": "portfolio_id"
+                        }
+                    ],
+                    "SQL": null
+                },
+                {
+                    "seq": 1,
+                    "name": "sqlite_autoindex_risk_config_1",
+                    "unique": 1,
+                    "origin": "u",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 1,
+                            "name": "portfolio_id"
+                        },
+                        {
+                            "seqno": 1,
+                            "cid": 2,
+                            "name": "version"
+                        }
+                    ],
+                    "SQL": null
+                }
+            ],
+            "Strict": true,
+            "Registros": 1,
+            "SQL": "CREATE TABLE risk_config (\n    id INTEGER PRIMARY KEY,\n    portfolio_id INTEGER NOT NULL REFERENCES portfolio(id),\n    version INTEGER NOT NULL CHECK (version > 0),\n    max_exposure_bps INTEGER NOT NULL\n        CHECK (max_exposure_bps BETWEEN 0 AND 10000),\n    max_daily_loss_bps INTEGER NOT NULL\n        CHECK (max_daily_loss_bps BETWEEN 0 AND 10000),\n    max_data_age_seconds INTEGER NOT NULL\n        CHECK (max_data_age_seconds > 0),\n    min_order_micros INTEGER NOT NULL\n        CHECK (min_order_micros > 0),\n    fee_bps INTEGER NOT NULL\n        CHECK (fee_bps BETWEEN 0 AND 10000),\n    slippage_bps INTEGER NOT NULL\n        CHECK (slippage_bps BETWEEN 0 AND 10000),\n    prediction_threshold REAL NOT NULL\n        CHECK (prediction_threshold > 0),\n    emergency_stop INTEGER NOT NULL DEFAULT 0\n        CHECK (emergency_stop IN (0, 1)),\n    created_at INTEGER NOT NULL DEFAULT (unixepoch()),\n    UNIQUE (portfolio_id, version),\n    UNIQUE (id, portfolio_id)\n) STRICT"
+        },
+        "system_logs": {
+            "Descripcion": "Eventos operativos del sistema.",
+            "Columnas": [
+                {
+                    "cid": 0,
+                    "name": "id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 1,
+                    "hidden": 0
+                },
+                {
+                    "cid": 1,
+                    "name": "cycle_id",
+                    "type": "INTEGER",
+                    "notnull": 0,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 2,
+                    "name": "level",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 3,
+                    "name": "component",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 4,
+                    "name": "message",
+                    "type": "TEXT",
+                    "notnull": 1,
+                    "dflt_value": null,
+                    "pk": 0,
+                    "hidden": 0
+                },
+                {
+                    "cid": 5,
+                    "name": "created_at",
+                    "type": "INTEGER",
+                    "notnull": 1,
+                    "dflt_value": "unixepoch()",
+                    "pk": 0,
+                    "hidden": 0
+                }
+            ],
+            "Llave_primaria": [
+                "id"
+            ],
+            "Llaves_foraneas": [
+                {
+                    "ID": 0,
+                    "Tabla_origen": "system_logs",
+                    "Columnas_origen": [
+                        "cycle_id"
+                    ],
+                    "Tabla_destino": "agent_cycles",
+                    "Columnas_destino": [
+                        "id"
+                    ],
+                    "ON_UPDATE": "NO ACTION",
+                    "ON_DELETE": "NO ACTION"
+                }
+            ],
+            "Indices": [
+                {
+                    "seq": 0,
+                    "name": "idx_system_logs_time",
+                    "unique": 0,
+                    "origin": "c",
+                    "partial": 0,
+                    "Columnas": [
+                        {
+                            "seqno": 0,
+                            "cid": 5,
+                            "name": "created_at"
+                        }
+                    ],
+                    "SQL": "CREATE INDEX idx_system_logs_time\nON system_logs(created_at)"
+                }
+            ],
+            "Strict": true,
+            "Registros": 2,
+            "SQL": "CREATE TABLE system_logs (\n    id INTEGER PRIMARY KEY,\n    cycle_id INTEGER REFERENCES agent_cycles(id),\n    level TEXT NOT NULL\n        CHECK (level IN ('INFO', 'WARNING', 'ERROR')),\n    component TEXT NOT NULL,\n    message TEXT NOT NULL,\n    created_at INTEGER NOT NULL DEFAULT (unixepoch())\n) STRICT"
+        }
+    },
+    "Relaciones": [
+        {
+            "ID": 0,
+            "Tabla_origen": "agent_cycles",
+            "Columnas_origen": [
+                "risk_config_id",
+                "portfolio_id"
+            ],
+            "Tabla_destino": "risk_config",
+            "Columnas_destino": [
+                "id",
+                "portfolio_id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 1,
+            "Tabla_origen": "agent_cycles",
+            "Columnas_origen": [
+                "prediction_id",
+                "candle_id"
+            ],
+            "Tabla_destino": "predictions",
+            "Columnas_destino": [
+                "id",
+                "candle_id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 2,
+            "Tabla_origen": "agent_cycles",
+            "Columnas_origen": [
+                "candle_id"
+            ],
+            "Tabla_destino": "candles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 3,
+            "Tabla_origen": "agent_cycles",
+            "Columnas_origen": [
+                "portfolio_id"
+            ],
+            "Tabla_destino": "portfolio",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "agent_decisions",
+            "Columnas_origen": [
+                "cycle_id"
+            ],
+            "Tabla_destino": "agent_cycles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "candles",
+            "Columnas_origen": [
+                "asset_id"
+            ],
+            "Tabla_destino": "assets",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "equity_history",
+            "Columnas_origen": [
+                "cycle_id"
+            ],
+            "Tabla_destino": "agent_cycles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "error_logs",
+            "Columnas_origen": [
+                "cycle_id"
+            ],
+            "Tabla_destino": "agent_cycles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "orders",
+            "Columnas_origen": [
+                "decision_id"
+            ],
+            "Tabla_destino": "agent_decisions",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "positions",
+            "Columnas_origen": [
+                "asset_id"
+            ],
+            "Tabla_destino": "assets",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 1,
+            "Tabla_origen": "positions",
+            "Columnas_origen": [
+                "portfolio_id"
+            ],
+            "Tabla_destino": "portfolio",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "predictions",
+            "Columnas_origen": [
+                "model_version"
+            ],
+            "Tabla_destino": "model_versions",
+            "Columnas_destino": [
+                "version"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 1,
+            "Tabla_origen": "predictions",
+            "Columnas_origen": [
+                "candle_id"
+            ],
+            "Tabla_destino": "candles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "risk_config",
+            "Columnas_origen": [
+                "portfolio_id"
+            ],
+            "Tabla_destino": "portfolio",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        },
+        {
+            "ID": 0,
+            "Tabla_origen": "system_logs",
+            "Columnas_origen": [
+                "cycle_id"
+            ],
+            "Tabla_destino": "agent_cycles",
+            "Columnas_destino": [
+                "id"
+            ],
+            "ON_UPDATE": "NO ACTION",
+            "ON_DELETE": "NO ACTION"
+        }
+    ]
+}
